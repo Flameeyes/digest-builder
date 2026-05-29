@@ -1,0 +1,69 @@
+# TrueNAS SCALE Custom App — Digest Builder
+#
+# Deploy via TrueNAS UI:
+#   Apps > Discover Apps > ⋮ menu > Install via YAML
+#   Paste this entire file into the "Custom Config" editor.
+#
+# Or deploy via SSH:
+#   Save this file to a dataset, e.g. /mnt/pool/apps/digest-builder/compose.yaml
+#   cd /mnt/pool/apps/digest-builder && docker compose up
+#
+# BEFORE DEPLOYING:
+#   1. Create datasets for config, output, and state:
+#        /mnt/pool/apps/digest-builder/config/    — put config.yaml here
+#        /mnt/pool/apps/digest-builder/output/     — EPUBs are written here
+#        /mnt/pool/apps/digest-builder/state/      — OAuth2 token persistence
+#   2. Replace ALL placeholder values below (marked with «angle quotes»).
+#   3. Copy config.example.yaml to the config dataset as config.yaml and edit it.
+#
+# SCHEDULING:
+#   This is a batch job — it runs once and exits. To run daily:
+#     TrueNAS UI > System > Advanced > Cron Jobs > Add
+#     Command:  docker compose -f /mnt/pool/apps/digest-builder/compose.yaml up
+#     Schedule: 0 5 * * *  (daily at 05:00)
+#
+#   Alternatively, use the included cron sidecar (uncomment the 'scheduler'
+#   service below) to keep everything self-contained.
+#
+---
+services:
+  digest-builder:
+    image: ghcr.io/flameeyes/digest-builder:latest  # or build locally — see README
+    container_name: digest-builder
+    restart: "no"
+    environment:
+      TZ: Europe/London
+      # ── Wallabag credentials (edit these) ──────────────────────────────
+
+      WALLABAG_URL: "https://wallabag.example.net"
+      WALLABAG_CLIENT_ID: "«your_client_id»"
+      WALLABAG_CLIENT_SECRET: "«your_client_secret»"
+      WALLABAG_USERNAME: "«your_username»"
+      WALLABAG_PASSWORD: "«your_password»"
+    volumes:
+      # ── Adjust these paths to your TrueNAS datasets ────────────────────
+      - /mnt/pool/apps/digest-builder/config/config.yaml:/etc/digest-builder/config.yaml:ro
+      - /mnt/pool/apps/digest-builder/output:/output
+      - /mnt/pool/apps/digest-builder/state:/state
+    command: ["--config", "/etc/digest-builder/config.yaml"]
+
+  # ── Optional: self-contained cron scheduler ──────────────────────────────
+  # Uncomment to run digest-builder on a schedule without a TrueNAS cron job.
+  # This uses a tiny Alpine container that triggers the main service.
+  #
+  # scheduler:
+  #   image: alpine:3.20
+  #   container_name: digest-scheduler
+  #   restart: unless-stopped
+  #   depends_on:
+  #     digest-builder:
+  #       condition: service_completed_successfully
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   # Runs daily at 05:00. Adjust the cron expression as needed.
+  #   entrypoint: ["/bin/sh", "-c"]
+  #   command:
+  #     - |
+  #       apk add --no-cache docker-cli
+  #       echo "0 5 * * * docker start digest-builder" | crontab -
+  #       crond -f -l 2

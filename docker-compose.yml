@@ -1,0 +1,27 @@
+# docker-compose.yml — standard deployment
+#
+# Usage:
+#   cp .env.example .env        # fill in real values
+#   cp config.example.yaml config.yaml
+#   docker compose up --build
+#
+# For scheduled runs add a host cron entry:
+#   0 5 * * * cd /path/to/digest-builder && docker compose up --build
+#
+services:
+  digest-builder:
+    build: .
+    container_name: digest-builder
+    restart: "no"                      # batch job — runs once and exits
+    environment:
+      - TZ=${TZ:-Europe/London}
+      - WALLABAG_URL=${WALLABAG_URL}
+      - WALLABAG_CLIENT_ID=${WALLABAG_CLIENT_ID}
+      - WALLABAG_CLIENT_SECRET=${WALLABAG_CLIENT_SECRET}
+      - WALLABAG_USERNAME=${WALLABAG_USERNAME}
+      - WALLABAG_PASSWORD=${WALLABAG_PASSWORD}
+    volumes:
+      - ./config.yaml:/etc/digest-builder/config.yaml:ro
+      - ${OUTPUT_DIR:-./output}:/output
+      - ${STATE_DIR:-./state}:/state     # OAuth2 token persistence
+    command: ["--config", "/etc/digest-builder/config.yaml"]

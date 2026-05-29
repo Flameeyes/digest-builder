@@ -1,0 +1,39 @@
+version = 1
+SPDX-PackageName = "digest-builder"
+SPDX-PackageSupplier = "Bob the Skull <bob.github@defp.uk>"
+
+[[annotations]]
+path = ["go.mod", "go.sum"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Bob the Skull <bob.github@defp.uk>"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = ["config.example.yaml", ".env.example"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Bob the Skull <bob.github@defp.uk>"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = "docker-compose.yml"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Bob the Skull <bob.github@defp.uk>"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = ["truenas/compose.yaml", "truenas/README.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Bob the Skull <bob.github@defp.uk>"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = ".gitignore"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Bob the Skull <bob.github@defp.uk>"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = "LICENSES/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Bob the Skull <bob.github@defp.uk>"
+SPDX-License-Identifier = "0BSD"

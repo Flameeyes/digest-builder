@@ -1,0 +1,69 @@
+# digest-builder configuration
+#
+# All wallabag.* fields can be overridden by environment variables:
+#   WALLABAG_URL, WALLABAG_CLIENT_ID, WALLABAG_CLIENT_SECRET,
+#   WALLABAG_USERNAME, WALLABAG_PASSWORD
+#
+# Output and state paths can also be overridden:
+#   DIGEST_OUTPUT_DIR, DIGEST_STATE_FILE
+
+wallabag:
+  url: "https://wallabag.example.net"
+  client_id: "your_client_id"
+  client_secret: "your_client_secret"
+  username: "your_username"
+  password: "your_password"
+
+digest:
+  # Wallabag tag that marks articles as ready for digest
+  pending_tag: "digest-pending"
+
+  # Minimum word count to include (0 = no filter)
+  min_word_count: 0
+
+  # Section ordering and tag-to-section mapping.
+  # Articles are grouped by the first matching Wallabag tag.
+  # Articles with no matching tag go into "general_tech".
+  sections:
+    - key: ai_case
+      label: "AI & CASE Tools"
+      tags: ["AI & CASE Tools"]
+    - key: general_tech
+      label: "Hacker News & Tech"
+      tags: ["Hacker News & Tech"]
+    - key: technical_writing
+      label: "Technical Writing"
+      tags: ["Technical Writing"]
+    - key: photography
+      label: "Photography"
+      tags: ["Photography"]
+    - key: ft_subscriber
+      label: "Financial Times"
+      tags: ["Financial Times"]
+    - key: hbr_subscriber
+      label: "Harvard Business Review"
+      tags: ["Harvard Business Review"]
+    - key: ftav_further_reading
+      label: "FTAV Further Reading"
+      tags: ["FTAV Further Reading"]
+
+  # Exclude articles whose title contains any of these (case-insensitive)
+  exclude_patterns:
+    - podcast
+    - vergecast
+    - buying guide
+
+output:
+  # Directory where EPUBs are written
+  dir: "/output"
+  # Filename pattern — {{.Date}} is replaced with YYYY-MM-DD-HHMM
+  filename_format: "digest-{{.Date}}.epub"
+
+state:
+  # OAuth2 token persistence file
+  file: "/state/token.json"
+
+# Optional HTTP proxy (for environments that need it)
+# proxy:
+#   http: "http://proxy:8080"
+#   https: "http://proxy:8080"

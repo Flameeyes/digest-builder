@@ -1,0 +1,17 @@
+# Binaries
+digest-builder
+*.exe
+
+# Config with real credentials
+config.yaml
+.env
+
+# Output and state
+output/
+state/
+
+# Go
+vendor/
+
+# OS
+.DS_Store
