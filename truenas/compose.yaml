@@ -28,7 +28,7 @@
 ---
 services:
   digest-builder:
-    image: ghcr.io/flameeyes/digest-builder:latest  # or build locally — see README
+    image: ghcr.io/flameeyes/digest-builder:main
     container_name: digest-builder
     restart: "no"
     environment:

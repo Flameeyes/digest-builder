@@ -3,14 +3,14 @@
 # Usage:
 #   cp .env.example .env        # fill in real values
 #   cp config.example.yaml config.yaml
-#   docker compose up --build
+#   docker compose up
 #
 # For scheduled runs add a host cron entry:
-#   0 5 * * * cd /path/to/digest-builder && docker compose up --build
+#   0 5 * * * cd /path/to/digest-builder && docker compose up
 #
 services:
   digest-builder:
-    build: .
+    image: ghcr.io/flameeyes/digest-builder:main
     container_name: digest-builder
     restart: "no"                      # batch job — runs once and exits
     environment:
